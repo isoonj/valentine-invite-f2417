@@ -17,18 +17,22 @@
     body{
       margin:0;
       min-height:100vh;
-      display:grid;
-      place-items:center;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;   /* top-align so tall content can scroll */
+      padding:32px 16px;        /* breathing room */
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color:var(--text);
       background:
         radial-gradient(900px 500px at 25% 20%, #fff 0%, transparent 45%),
         radial-gradient(900px 500px at 75% 80%, #fff 0%, transparent 45%),
         linear-gradient(135deg,var(--bg1),var(--bg2));
-      overflow:hidden;
-    }
+      overflow-y:auto;          /* allow scrolling */
+      overflow-x:hidden;
+  }
+
     .card{
-      width:min(680px,92vw);
+      width:min(680px, 100%);
       background:var(--card);
       backdrop-filter: blur(10px);
       border:1px solid #ffffff70;
@@ -38,6 +42,7 @@
       text-align:center;
       position:relative;
     }
+
     .topline{ font-weight:950; letter-spacing:.02em; opacity:.9; margin-bottom:8px; }
     .heart{
       font-size:56px;
@@ -68,10 +73,11 @@
     .media img{
       width:100%;
       height:auto;
-      max-height:none;
+      max-height:min(360px, 45vh); /* keeps it reasonable on desktop */
       object-fit:contain;
       display:block;
     }
+
     .media .caption{
       padding:10px 12px;
       font-weight:850;
