@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Faith 💘</title>
+  <style>
+    :root{
+      --bg1:#ffe7ef;
+      --bg2:#ff9db2;
+      --card:#ffffffcc;
+      --text:#1f1f1f;
+      --yes:#ff3b6a;
+      --no:#6c757d;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(900px 500px at 25% 20%, #fff 0%, transparent 45%),
+        radial-gradient(900px 500px at 75% 80%, #fff 0%, transparent 45%),
+        linear-gradient(135deg,var(--bg1),var(--bg2));
+      overflow:hidden;
+    }
+    .card{
+      width:min(680px,92vw);
+      background:var(--card);
+      backdrop-filter: blur(10px);
+      border:1px solid #ffffff70;
+      border-radius:28px;
+      padding:26px 22px;
+      box-shadow:0 20px 60px rgba(0,0,0,.18);
+      text-align:center;
+      position:relative;
+    }
+    .topline{ font-weight:950; letter-spacing:.02em; opacity:.9; margin-bottom:8px; }
+    .heart{
+      font-size:56px;
+      filter: drop-shadow(0 10px 16px rgba(255,59,106,.25));
+      animation: float 2.6s ease-in-out infinite;
+      margin:6px 0 8px;
+    }
+    @keyframes float{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    h1{ margin:6px 0 10px; font-size:clamp(28px,4vw,44px); letter-spacing:-.02em; }
+    p{
+      margin:0 auto 14px;
+      font-size:clamp(16px,2.3vw,18px);
+      line-height:1.35;
+      max-width:52ch;
+      opacity:.95;
+    }
+
+    /* Cute media slot */
+    .media{
+      width:min(520px,92%);
+      margin:14px auto 8px;
+      border-radius:22px;
+      overflow:hidden;
+      border:1px solid #00000012;
+      background:#fff;
+      box-shadow:0 12px 24px rgba(0,0,0,.08);
+    }
+    .media img{
+      width:100%;
+      height:auto;
+      max-height:none;
+      object-fit:contain;
+      display:block;
+    }
+    .media .caption{
+      padding:10px 12px;
+      font-weight:850;
+      opacity:.85;
+      font-size:14px;
+    }
+
+    .btns{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:12px;
+      position:relative;
+      padding-bottom:12px;
+      min-height:74px;
+    }
+    button{
+      border:0;
+      padding:14px 18px;
+      border-radius:16px;
+      font-weight:950;
+      font-size:18px;
+      cursor:pointer;
+      transition: transform .12s ease, filter .2s ease, opacity .2s ease;
+      box-shadow:0 10px 20px rgba(0,0,0,.12);
+      user-select:none;
+      touch-action:manipulation;
+      white-space:nowrap;
+    }
+    button:active{transform:scale(.98)}
+    #yesBtn{ background:var(--yes); color:white; }
+    #noBtn{ background:var(--no); color:white; position:relative; }
+
+    .tiny{ margin-top:10px; font-size:12px; opacity:.68; }
+
+    .final{
+      display:none;
+      margin-top:14px;
+      padding:16px 14px;
+      border-radius:18px;
+      background:#fff;
+      border:1px solid #00000010;
+      text-align:center;
+    }
+    .final h2{ margin:6px 0 6px; font-size:28px; }
+    .final .sub{ margin:0 auto 10px; opacity:.9; max-width:56ch; }
+    .pill{
+      display:inline-block;
+      padding:8px 12px;
+      border-radius:999px;
+      background:#ffe3ea;
+      font-weight:950;
+    }
+
+    .surpriseWrap{
+      margin-top:12px;
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .secondary{
+      background:#f3f4f6;
+      color:#111;
+      box-shadow:none;
+      border:1px solid #00000010;
+      font-weight:950;
+    }
+    .danger{
+      background:#111;
+      color:#fff;
+      box-shadow:none;
+      border:1px solid #00000010;
+      font-weight:950;
+    }
+
+    .revealBox{
+      display:none;
+      margin-top:12px;
+      border-radius:18px;
+      background: linear-gradient(180deg, #fff, #fff7fb);
+      border:1px dashed #00000020;
+      padding:14px 14px;
+      text-align:left;
+      max-width:600px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+    .revealBox h3{ margin:4px 0 6px; font-size:18px; letter-spacing:-.01em; }
+    .revealBox .detail{ margin:0; line-height:1.45; opacity:.95; }
+    .code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      background:#111;
+      color:#fff;
+      padding:2px 8px;
+      border-radius:999px;
+      font-size:13px;
+    }
+
+    /* Toast */
+    .toast{
+      display:none;
+      margin:10px auto 0;
+      max-width:600px;
+      padding:10px 12px;
+      border-radius:14px;
+      background:#111;
+      color:#fff;
+      font-weight:900;
+      font-size:14px;
+      line-height:1.3;
+      opacity:.95;
+      text-align:center;
+    }
+
+    /* Fake "loading" overlay */
+    .overlay{
+      position:fixed;
+      inset:0;
+      display:none;
+      place-items:center;
+      background:rgba(0,0,0,.45);
+      backdrop-filter: blur(6px);
+      z-index:50;
+      padding:18px;
+    }
+    .modal{
+      width:min(520px,94vw);
+      background:#fff;
+      border-radius:22px;
+      border:1px solid #00000012;
+      box-shadow:0 30px 90px rgba(0,0,0,.35);
+      padding:16px 14px;
+      text-align:left;
+    }
+    .modalTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .modalTitle{
+      font-weight:950;
+      letter-spacing:-.01em;
+      font-size:16px;
+    }
+    .x{
+      border:0;
+      background:#f3f4f6;
+      border:1px solid #00000012;
+      border-radius:12px;
+      padding:8px 10px;
+      font-weight:950;
+      cursor:pointer;
+      box-shadow:none;
+    }
+    .bar{
+      height:10px;
+      background:#f3f4f6;
+      border-radius:999px;
+      overflow:hidden;
+      border:1px solid #00000010;
+      margin:10px 0 6px;
+    }
+    .bar > div{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg, #ff3b6a, #ff9db2);
+      border-radius:999px;
+      transition: width .18s ease;
+    }
+    .status{
+      font-weight:850;
+      opacity:.9;
+      margin:0;
+      font-size:14px;
+      line-height:1.35;
+    }
+    .hint{
+      margin:10px 0 0;
+      font-size:12px;
+      opacity:.75;
+    }
+
+    /* Fake error screen */
+    .errorBox{
+      display:none;
+      margin-top:10px;
+      border-radius:18px;
+      border:1px dashed #00000020;
+      padding:12px 12px;
+      background:#fff;
+      text-align:left;
+      max-width:600px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+    .errorBox .errTitle{ font-weight:950; margin:0 0 6px; }
+    .errorBox .errMsg{ margin:0; opacity:.9; line-height:1.35; }
+
+    canvas{ position:fixed; inset:0; pointer-events:none; }
+  </style>
+</head>
+<body>
+  <canvas id="confetti"></canvas>
+
+  <div class="card">
+    <div class="topline">Isoon ➜ Faith</div>
+    <div class="heart">💘</div>
+
+    <h1>Faith, will you be my Valentine?</h1>
+
+    <p>
+      I promise to be sweet, silly, have the best time with you and
+      <b>make you feel very loved 💕</b>
+      My apologies… the “No” button didn't pass QA.
+    </p>
+
+    <div class="media" aria-label="cute gif slot">
+      <img
+        src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbjg1eW84M3p0MncxYWw5N2g1MWczdjRwcmthMjI3czQ2YnI1dG1ydSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/vDhDcIEmShbUI/giphy.gif"
+        alt="Cute gif"
+      />
+      <div class="caption">If you’re reading this, you’re already my favorite 🥹</div>
+    </div>
+
+    <div class="btns" id="btnArea">
+      <button id="yesBtn">Yes 💖</button>
+      <button id="noBtn">No 🙃</button>
+    </div>
+
+    <div class="final" id="final">
+      <h2>LET’S GOOOOO 🥳💞</h2>
+      <p class="sub">
+        Faith, you just made me the happiest human.
+        I can’t wait to celebrate us — and I’m taking you somewhere special. 😌
+      </p>
+
+      <div class="pill">Official Valentine Status: ✅ Confirmed</div>
+
+      <div class="surpriseWrap">
+        <button class="secondary" id="fakeRevealBtn">Reveal the surprise 👀</button>
+        <button class="danger" id="panicBtn">Hide everything 😳</button>
+      </div>
+
+      <div class="toast" id="toast"></div>
+
+      <div class="errorBox" id="errorBox">
+        <p class="errTitle">⚠️ Unexpected Error</p>
+        <p class="errMsg" id="errMsg">
+          Surprise server is down (because Faith is too powerful). Try again.
+        </p>
+      </div>
+
+      <div class="revealBox" id="revealBox">
+        <h3>Okay okay… you earned it 🌹</h3>
+        <p class="detail">
+          <b>Date:</b> <span class="code">2/13/26</span><br/>
+          <b>Time:</b> <span class="code">9:30 PM</span><br/>
+          <b>Plan:</b> Omakase dinner at <b>Robin</b> (SF) 🍣✨<br/>
+          <b>Dress code:</b> “You already look amazing” (so… anything) 😌<br/>
+          <b>Your job:</b> show up hungry & let me spoil you.
+        </p>
+      </div>
+    </div>
+
+    <div class="tiny">Tip: on mobile, tapping “No” makes it run away too 😭</div>
+  </div>
+
+  <!-- Loading / fake error overlay -->
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modalTop">
+        <div class="modalTitle" id="modalTitle">Decrypting the Surprise 🔐</div>
+        <button class="x" id="closeOverlay" aria-label="Close">X</button>
+      </div>
+      <div class="bar"><div id="barFill"></div></div>
+      <p class="status" id="statusLine">Initializing romance protocol…</p>
+      <p class="hint" id="hintLine">Do not panic. This is very serious technology.</p>
+    </div>
+  </div>
+
+<script>
+  // =========================
+  // SETTINGS YOU SHOULD EDIT
+  // =========================
+
+  // Passcode for reveal:
+  const PASSCODE = "HOJICHA";
+
+  // Notifications (optional):
+  // 1) Create a Formspree form and paste its endpoint here (looks like https://formspree.io/f/xxxxxx)
+  // 2) Leave empty "" to disable notifications.
+  const NOTIFY_URL = ""; // <-- paste Formspree URL here when ready
+
+  // =========================
+  // NOTIFICATION HELPER
+  // =========================
+  function notify(eventType, extra = {}) {
+    if (!NOTIFY_URL) return; // disabled until you paste a URL
+
+    const payload = {
+      event: eventType,
+      page: window.location.href,
+      time_iso: new Date().toISOString(),
+      user_agent: navigator.userAgent,
+      ...extra
+    };
+
+    // keepalive helps it still send if they close quickly
+    fetch(NOTIFY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      keepalive: true
+    }).catch(() => {});
+  }
+
+  // =========================
+  // MAIN LOGIC
+  // =========================
+  const yesBtn = document.getElementById('yesBtn');
+  const noBtn = document.getElementById('noBtn');
+  const btnArea = document.getElementById('btnArea');
+  const finalBox = document.getElementById('final');
+
+  const fakeRevealBtn = document.getElementById('fakeRevealBtn');
+  const revealBox = document.getElementById('revealBox');
+  const panicBtn  = document.getElementById('panicBtn');
+  const toast = document.getElementById('toast');
+  const errorBox = document.getElementById('errorBox');
+  const errMsg = document.getElementById('errMsg');
+
+  // overlay bits
+  const overlay = document.getElementById('overlay');
+  const closeOverlay = document.getElementById('closeOverlay');
+  const barFill = document.getElementById('barFill');
+  const statusLine = document.getElementById('statusLine');
+  const hintLine = document.getElementById('hintLine');
+  const modalTitle = document.getElementById('modalTitle');
+
+  const noTexts = [
+    "No 🙃",
+    "Wait… what? 😳",
+    "Are you sure? 🥺",
+    "Faith pls 😭",
+    "That’s illegal 😤",
+    "I’m gonna cry 😭💘",
+    "Nice try 😏",
+    "Ok you’re just flirting now 😌",
+    "PRESS YES 😈"
+  ];
+  let noCount = 0;
+
+  // passcode / chaos
+  const failLines = [
+    "Wrong passcode 😌 (nice try, FBI).",
+    "Access denied. Protected by love & encryption 💘",
+    "That’s not it… but I respect the confidence 😭",
+    "ERROR: Valentine privileges not found. Try again 😈",
+    "Faith… I believe in you. One more time 🥺"
+  ];
+  let failCount = 0;
+
+  // fake error lines
+  const errorLines = [
+    "Connection refused: FaithTooCuteException",
+    "500: Romantic server overloaded",
+    "Captcha failed (because you’re not a robot, you’re an angel)",
+    "Timeout: heart.exe is still loading…"
+  ];
+
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.style.display = "block";
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(()=> toast.style.display="none", 2200);
+  }
+
+  function moveNoButton() {
+    const areaRect = btnArea.getBoundingClientRect();
+    const btnRect = noBtn.getBoundingClientRect();
+    const padding = 8;
+
+    const maxX = Math.max(padding, areaRect.width - btnRect.width - padding);
+    const maxY = 150;
+
+    const x = Math.max(padding, Math.random() * maxX);
+    const y = Math.max(0, Math.random() * maxY);
+
+    noBtn.style.position = 'absolute';
+    noBtn.style.left = x + 'px';
+    noBtn.style.top  = y + 'px';
+  }
+
+  function powerUpYes() {
+    const scale = Math.min(1.0 + noCount * 0.07, 1.75);
+    yesBtn.style.transform = `scale(${scale})`;
+    yesBtn.style.filter = `brightness(${Math.min(1.0 + noCount * 0.06, 1.25)})`;
+  }
+
+  // Desktop hover = dodge
+  noBtn.addEventListener('mouseenter', () => {
+    noCount++;
+    noBtn.textContent = noTexts[Math.min(noCount, noTexts.length - 1)];
+    moveNoButton();
+    powerUpYes();
+  });
+
+  // Mobile tap = dodge
+  noBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    noCount++;
+    noBtn.textContent = noTexts[Math.min(noCount, noTexts.length - 1)];
+    moveNoButton();
+    powerUpYes();
+  }, {passive:false});
+
+  yesBtn.addEventListener('click', () => {
+    notify("YES_clicked", { who: "Faith" });
+
+    finalBox.style.display = 'block';
+    btnArea.style.display = 'none';
+    startConfetti(240);
+  });
+
+  function openOverlay(){
+    overlay.style.display = "grid";
+    barFill.style.width = "0%";
+    errorBox.style.display = "none";
+    revealBox.style.display = "none";
+  }
+  function closeOverlayNow(){
+    overlay.style.display = "none";
+  }
+  closeOverlay.addEventListener('click', closeOverlayNow);
+  overlay.addEventListener('click', (e)=>{ if(e.target === overlay) closeOverlayNow(); });
+
+  async function runFakeLoading(){
+    openOverlay();
+    modalTitle.textContent = "Decrypting the Surprise 🔐";
+
+    const steps = [
+      ["Initializing romance protocol…", "Do not panic. This is very serious technology."],
+      ["Calibrating sushi radar…", "Locating omakase vibes…"],
+      ["Verifying Valentine status…", "Cross-checking: Faith == cutest ✅"],
+      ["Almost there…", "If this crashes, blame Cupid’s Wi-Fi."]
+    ];
+
+    for (let i=0;i<steps.length;i++){
+      statusLine.textContent = steps[i][0];
+      hintLine.textContent = steps[i][1];
+      barFill.style.width = ((i+1)/steps.length*100) + "%";
+      await new Promise(r=>setTimeout(r, 520));
+    }
+
+    // 60% chance to show a fake error first (chaotic), then require another click to try again
+    const showErrorFirst = Math.random() < 0.60;
+
+    if (showErrorFirst) {
+      modalTitle.textContent = "Uh oh… 😳";
+      const line = errorLines[Math.floor(Math.random()*errorLines.length)];
+      statusLine.textContent = "Operation failed.";
+      hintLine.textContent = line;
+
+      errorBox.style.display = "block";
+      errMsg.textContent = line + ". Tap Reveal again (or enter passcode like a genius).";
+
+      await new Promise(r=>setTimeout(r, 900));
+      closeOverlayNow();
+
+      notify("Reveal_attempt_fake_error", { line });
+      return false;
+    }
+
+    await new Promise(r=>setTimeout(r, 300));
+    closeOverlayNow();
+    return true;
+  }
+
+  fakeRevealBtn?.addEventListener('click', async () => {
+    notify("Reveal_button_clicked");
+
+    const okToPrompt = await runFakeLoading();
+    if (!okToPrompt) {
+      showToast("😈 The surprise fought back. Try Reveal again.");
+      return;
+    }
+
+    const guess = prompt("Passcode required 🔒\nHint: what is the name your favorite baby? 😌");
+    if (guess === null) {
+      notify("Passcode_prompt_canceled");
+      return;
+    }
+
+    const cleaned = guess.trim().toUpperCase();
+    if (cleaned === PASSCODE) {
+      revealBox.style.display = 'block';
+      errorBox.style.display = "none";
+      showToast("✅ Correct. Surprise unlocked 🥳");
+      startConfetti(180);
+
+      fakeRevealBtn.textContent = "Surprise revealed ✅";
+      fakeRevealBtn.disabled = true;
+      fakeRevealBtn.style.opacity = "0.85";
+      fakeRevealBtn.style.cursor = "default";
+
+      notify("Surprise_revealed_success");
+    } else {
+      failCount++;
+      const line = failLines[Math.min(failCount - 1, failLines.length - 1)];
+      showToast(line);
+
+      const scale = Math.min(1 + failCount * 0.06, 1.35);
+      fakeRevealBtn.style.transform = `scale(${scale})`;
+
+      if (failCount % 2 === 0) startConfetti(40);
+
+      notify("Passcode_wrong", { attempt: cleaned, failCount });
+    }
+  });
+
+  panicBtn?.addEventListener('click', () => {
+    revealBox.style.display = 'none';
+    errorBox.style.display = "none";
+    showToast("🙈 Hidden. Surprise is safe.");
+    notify("Hide_everything_clicked");
+  });
+
+  // =========================
+  // CONFETTI
+  // =========================
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  let confetti = [];
+  let running = false;
+
+  function resize() {
+    canvas.width = window.innerWidth * devicePixelRatio;
+    canvas.height = window.innerHeight * devicePixelRatio;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function rand(min, max){ return Math.random()*(max-min)+min; }
+
+  function startConfetti(count=180){
+    resize();
+    confetti = Array.from({length:count}, () => ({
+      x: rand(0, canvas.width),
+      y: rand(-canvas.height, 0),
+      r: rand(6, 14) * devicePixelRatio,
+      vx: rand(-2, 2) * devicePixelRatio,
+      vy: rand(3, 7) * devicePixelRatio,
+      rot: rand(0, Math.PI*2),
+      vr: rand(-0.12, 0.12),
+      c: `hsl(${Math.floor(rand(0, 360))}, 85%, 60%)`
+    }));
+    if (!running){
+      running = true;
+      requestAnimationFrame(tick);
+      setTimeout(()=> running=false, 2600);
+    }
+  }
+
+  function tick(){
+    if (!running) { ctx.clearRect(0,0,canvas.width,canvas.height); return; }
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    for (const p of confetti){
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.vr;
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.r/2, -p.r/3, p.r, p.r*0.66);
+      ctx.restore();
+
+      if (p.y > canvas.height + 40) {
+        p.y = rand(-200, -40);
+        p.x = rand(0, canvas.width);
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+</script>
+</body>
+</html>
